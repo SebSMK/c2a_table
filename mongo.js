@@ -49,21 +49,18 @@ mongo = (function() {
         
         var deferred = Q.defer();
         
-        try{
           var db_collection = self.db_inst.collection(collection); 
           
           db_collection.insert(data, {w:1})
           .then(function(){
             logger.info("mongo - inserted: " + JSON.stringify(data));
             deferred.resolve(data);
-          });
-                  
-        }
-        catch(err) {
-          /*catch and break on all errors or exceptions on all the above methods*/
-          logger.error('mongo.prototype.insert', err);
-          deferred.reject(err);
-        } 
+          })
+          .catch(function(err) {
+            /*catch and break on all errors or exceptions on all the above methods*/
+            logger.error('mongo.prototype.insert', err);
+            deferred.reject(err);
+          }) 
                                                
       return deferred.promise;
     } 
@@ -78,21 +75,19 @@ mongo = (function() {
         
         var deferred = Q.defer();
         
-        try{
-          var db_collection = self.db_inst.collection(collection);
-          //var modif = db_collection.update(key, value, {w:1});
-          
-          db_collection.update(key, value, {w:1})
-          .then(function(number){
-            logger.info("mongo - updated: " + JSON.stringify(JSON.stringify(key)));
-            deferred.resolve(number);
-          })          
-        }
-        catch(err) {
+        var db_collection = self.db_inst.collection(collection);
+        //var modif = db_collection.update(key, value, {w:1});
+        
+        db_collection.update(key, value, {w:1})
+        .then(function(number){
+          logger.info("mongo - updated: " + JSON.stringify(JSON.stringify(key)));
+          deferred.resolve(number);
+        })
+        .catch(function(err) {
           /*catch and break on all errors or exceptions on all the above methods*/
           logger.error('mongo.prototype.update', err);
           deferred.reject(err);
-        } 
+        })           
                                                
       return deferred.promise;
     }
@@ -135,21 +130,19 @@ mongo = (function() {
           throw ("No MongoDB instance");
         
         var deferred = Q.defer();
-        
-        try{
-          var items = [];
-          var db_collection = self.db_inst.collection(collection);
-          db_collection.remove(req, {w:1})
-          .then(function(number){
-            logger.info("mongo - removed: " + JSON.stringify(JSON.stringify(req)));
-            deferred.resolve(number);
-          })   
-        }
-        catch(err) {
+      
+        var items = [];
+        var db_collection = self.db_inst.collection(collection);
+        db_collection.remove(req, {w:1})
+        .then(function(number){
+          logger.info("mongo - removed: " + JSON.stringify(JSON.stringify(req)));
+          deferred.resolve(number);
+        })
+        .catch(function(err) {
           /*catch and break on all errors or exceptions on all the above methods*/
           logger.error('mongo.prototype.delete', err);
           deferred.reject(err);
-        } 
+        })    
                                                
       return deferred.promise;
     }
